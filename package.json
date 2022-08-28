@@ -1,0 +1,31 @@
+{
+  "name": "cs3219-project-ay2223s1-g12",
+  "version": "1.0.0",
+  "description": "This is a template repository for CS3219 project.\r Testing only",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "eslint-config-google": "^0.14.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.31.1",
+    "eslint-plugin-react-hooks": "^4.6.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CS3219-AY2223S1/cs3219-project-ay2223s1-g12.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CS3219-AY2223S1/cs3219-project-ay2223s1-g12/issues"
+  },
+  "homepage": "https://github.com/CS3219-AY2223S1/cs3219-project-ay2223s1-g12#readme"
+}
