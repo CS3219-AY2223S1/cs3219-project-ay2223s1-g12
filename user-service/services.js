@@ -1,4 +1,4 @@
-import bcrpyt from 'bcrypt'
+import bcrpyt from 'bcrypt';
 
 // hash and salt passwords
 export async function hashSaltPassword(password) {

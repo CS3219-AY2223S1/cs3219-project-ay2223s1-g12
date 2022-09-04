@@ -1,5 +1,5 @@
 import { ormCreateUser as _createUser } from '../model/user-orm.js';
-import { hashSaltPassword, verifyPassword } from '../services.js';
+import { hashSaltPassword } from '../services.js';
 
 export async function createUser(req, res) {
     try {
@@ -19,4 +19,3 @@ export async function createUser(req, res) {
         return res.status(500).json({ message: 'Database failure when creating new user!' });
     }
 }
-
