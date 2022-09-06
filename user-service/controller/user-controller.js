@@ -1,6 +1,8 @@
 import { ormCreateUser as _createUser } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 
+import jwt from 'jsonwebtoken';
+
 export async function createUser(req, res) {
     try {
         const { username, password } = req.body;
@@ -20,22 +22,20 @@ export async function createUser(req, res) {
 }
 
 export async function loginUser(req, res) {
-    //Check for existing username
+    //Check for existing username in db
     userModel.findOne({
         username: req.body.username
-    }).exec((err, user) => {
+    }, function (err, user) {
         if (err) {
             res.status(500).send({ message: err });
             return;
         }
-        //Username does not exist
-        if (!user) {
-            res.status(400).send({ message: "Username does not exist!" });
-            return;
+        // TODO: implement comparePassword() hashing
+        // if (!user || !user.comparePassword(req.body.password)) {
+        if (!user || (user.password != req.body.password)) { // if user does not exist or password mismatch
+            return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
         }
-
-        res.status(200).send({ message: "Username exist!" });
-
+        return res.json({ token: jwt.sign({ username: user.username }, 'JWT_SECRET') });
     });
 
 }
