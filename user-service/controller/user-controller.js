@@ -1,13 +1,14 @@
 import { ormCreateUser as _createUser } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
-
 import jwt from 'jsonwebtoken';
+import { hashSaltPassword } from '../services.js';
 
 export async function createUser(req, res) {
     try {
         const { username, password } = req.body;
         if (username && password) {
-            const resp = await _createUser(username, password);
+            const hashedPassword = await hashSaltPassword(password);
+            const resp = await _createUser(username, hashedPassword);
             console.log(resp);
             if (resp.err) {
                 return res.status(400).json({ message: 'Could not create a new user!' });
