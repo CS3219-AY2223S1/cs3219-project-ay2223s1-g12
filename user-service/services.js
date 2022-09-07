@@ -1,10 +1,10 @@
-import bcrpyt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 // hash and salt passwords
 export async function hashSaltPassword(password) {
     const saltRounds = 10;
-    const salt = await bcrpyt.genSalt(saltRounds);
-    return bcrpyt.hash(password, salt);
+    const salt = await bcrypt.genSalt(saltRounds);
+    return bcrypt.hash(password, salt);
 }
 
 /**
@@ -13,5 +13,5 @@ export async function hashSaltPassword(password) {
  * @param {String} hashed taken from DB
  */
 export async function verifyPassword(password, hashed) {
-    return bcrpyt.compare(password, hashed);
+    return bcrypt.compare(password, hashed);
 }
