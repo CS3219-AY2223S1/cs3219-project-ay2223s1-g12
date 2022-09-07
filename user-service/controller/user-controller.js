@@ -1,7 +1,7 @@
 import { ormCreateUser as _createUser } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import jwt from 'jsonwebtoken';
-import { hashSaltPassword } from '../services.js';
+import { hashSaltPassword, verifyPassword } from '../services.js';
 
 export async function createUser(req, res) {
     try {
@@ -21,21 +21,31 @@ export async function createUser(req, res) {
         return res.status(500).json({ message: 'Database failure when creating new user!' });
     }
 }
-
 export async function loginUser(req, res) {
     //Check for existing username in db
     userModel.findOne({
         username: req.body.username
-    }, function (err, user) {
+    }, async function (err, user) {
         if (err) {
             res.status(500).send({ message: err });
             return;
         }
-        // TODO: implement comparePassword() hashing
-        // if (!user || !user.comparePassword(req.body.password)) {
-        if (!user || (user.password != req.body.password)) { // if user does not exist or password mismatch
-            return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
+
+        const FAILED_MSG = 'Authentication failed. Invalid user or password.';
+
+        // if user does not exist
+        if (!user) { 
+            return res.status(401).json({ message: FAILED_MSG });
         }
+
+        const hashedPassword = user.password;
+        const isCorrectPassword = await verifyPassword(req.body.password, hashedPassword);
+
+        // if password mismatch
+        if (!isCorrectPassword) { 
+            return res.status(401).json({ message: FAILED_MSG });
+        }
+
         return res.json({ token: jwt.sign({ username: user.username }, 'JWT_SECRET') });
     });
 
