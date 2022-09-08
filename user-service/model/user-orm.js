@@ -1,4 +1,10 @@
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { createUser } from './repository.js';
+
+// get config vars
+dotenv.config();
+
 
 // need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateUser(username, password) {
@@ -11,3 +17,8 @@ export async function ormCreateUser(username, password) {
         return { err };
     }
 }
+
+export function generateAccessToken(user) {
+    return jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }); //expire 30 mins
+}
+

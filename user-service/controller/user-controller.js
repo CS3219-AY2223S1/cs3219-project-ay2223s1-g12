@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { ormCreateUser as _createUser } from '../model/user-orm.js';
+import { ormCreateUser as _createUser, generateAccessToken } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
@@ -48,7 +48,8 @@ export async function loginUser(req, res) {
             return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
         }
 
-        const token = res.json({ token: jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }) }); //expire 30 mins
+        const token = generateAccessToken(user);
+        res.json({ token: token });
     });
 }
 
@@ -75,8 +76,6 @@ export async function authenticateToken(req, res, next) {
         if (err) return res.sendStatus(403)
         req.username = user.username
     })
-
-    console.log(req.username);
 
     res.json(posts.filter(post => post.username == req.username));
 }
