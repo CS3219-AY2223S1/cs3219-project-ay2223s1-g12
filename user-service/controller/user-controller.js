@@ -35,11 +35,9 @@ export async function loginUser(req, res) {
             return;
         }
 
-        const FAILED_MSG = 'Authentication failed. Invalid user or password.';
-
         // if user does not exist
         if (!user) {
-            return res.status(401).json({ message: FAILED_MSG });
+            return res.status(401).json({ message: 'Authentication failed. Invalid username.' });
         }
 
         const hashedPassword = user.password;
@@ -47,13 +45,10 @@ export async function loginUser(req, res) {
 
         // if password mismatch
         if (!isCorrectPassword) {
-            return res.status(401).json({ message: FAILED_MSG });
+            return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
         }
-        
-        const token = res.json({ token: jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }) }); //expire 30 mins
 
-        
-        
+        const token = res.json({ token: jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }) }); //expire 30 mins
     });
 
 }
