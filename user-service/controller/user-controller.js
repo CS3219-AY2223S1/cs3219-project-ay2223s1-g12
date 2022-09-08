@@ -49,11 +49,15 @@ export async function loginUser(req, res) {
         }
 
         const token = generateAccessToken(user);
-        res.json({ token: token });
+        const refreshToken = generateRefreshAccessToken(user);
+        res.json({
+            token: token,
+            refreshToken: refreshToken
+        });
     });
 }
 
-export async function authenticateToken(req, res, next) {
+export async function authenticateToken(req, res) {
     // Testing auth
     const posts = [
         {
@@ -77,5 +81,18 @@ export async function authenticateToken(req, res, next) {
     })
 
     res.json(posts.filter(post => post.username == req.username));
+}
+
+let refreshTokens = []; // TODO: store refreshTokens in db
+
+export async function refreshToken(req, res) {
+    const refreshToken = req.body.token
+    if (refreshToken == null) return res.status(401)
+    if (!refreshTokens.includes(refreshToken)) return res.status(403)
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if (err) return res.status(403)
+        const token = generateAccessToken({ name: user.name })
+        res.json({ token: token })
+    })
 }
 

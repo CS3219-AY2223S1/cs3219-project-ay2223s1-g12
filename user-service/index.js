@@ -1,6 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import { createUser, loginUser, authenticateToken } from './controller/user-controller.js';
+import {
+    createUser,
+    loginUser,
+    authenticateToken,
+    refreshToken
+} from './controller/user-controller.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -15,6 +20,7 @@ const router = express.Router();
 router.get('/', authenticateToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
+router.post('refreshToken', refreshToken);
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json');
