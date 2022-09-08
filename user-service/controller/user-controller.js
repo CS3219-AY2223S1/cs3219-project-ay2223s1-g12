@@ -1,7 +1,11 @@
 import { ormCreateUser as _createUser } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { hashSaltPassword, verifyPassword } from '../services.js';
+
+// get config vars
+dotenv.config();
 
 export async function createUser(req, res) {
     try {
@@ -34,7 +38,7 @@ export async function loginUser(req, res) {
         const FAILED_MSG = 'Authentication failed. Invalid user or password.';
 
         // if user does not exist
-        if (!user) { 
+        if (!user) {
             return res.status(401).json({ message: FAILED_MSG });
         }
 
@@ -42,11 +46,14 @@ export async function loginUser(req, res) {
         const isCorrectPassword = await verifyPassword(req.body.password, hashedPassword);
 
         // if password mismatch
-        if (!isCorrectPassword) { 
+        if (!isCorrectPassword) {
             return res.status(401).json({ message: FAILED_MSG });
         }
+        
+        const token = res.json({ token: jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }) }); //expire 30 mins
 
-        return res.json({ token: jwt.sign({ username: user.username }, 'JWT_SECRET') });
+        
+        
     });
 
 }
