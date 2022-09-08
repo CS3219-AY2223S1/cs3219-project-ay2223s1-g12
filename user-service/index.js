@@ -20,7 +20,7 @@ const router = express.Router();
 router.get('/', authenticateToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
-router.post('refreshToken', refreshToken);
+router.post('/refreshToken', refreshToken);
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json');

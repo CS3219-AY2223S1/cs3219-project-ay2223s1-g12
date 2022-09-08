@@ -19,7 +19,7 @@ export async function ormCreateUser(username, password) {
 }
 
 export function generateAccessToken(user) {
-    return jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }); //expire 30 mins
+    return jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' }); //expire 30 mins
 }
 
 export function generateRefreshAccessToken(user) {
