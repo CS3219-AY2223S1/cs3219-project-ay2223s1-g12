@@ -90,11 +90,22 @@ export async function authenticateToken(req, res) {
 export async function refreshToken(req, res) {
     const refreshToken = req.body.token
     if (refreshToken == null) return res.status(401)
-    if (!refreshTokens.includes(refreshToken)) return res.status(403)
+    if (!refreshTokens.includes(refreshToken)) {
+        return res.status(403).json({ message: 'FORBIDDEN' });
+    }
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         if (err) return res.status(403)
         const token = generateAccessToken({ username: user.username })
         res.json({ token: token })
     })
+}
+
+export async function logout(req, res) {
+    // Delete refreshToken from cache
+    const index = refreshTokens.indexOf(req.body.token);
+    if (index > -1) { // only splice array when item is found
+        refreshTokens.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    res.status(200).json({ message: 'Logout successful!' });
 }
 

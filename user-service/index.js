@@ -4,7 +4,8 @@ import {
     createUser,
     loginUser,
     authenticateToken,
-    refreshToken
+    refreshToken,
+    logout
 } from './controller/user-controller.js';
 
 const app = express();
@@ -21,6 +22,7 @@ router.get('/', authenticateToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
 router.post('/refreshToken', refreshToken);
+router.delete('/logout', logout);
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json');
