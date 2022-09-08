@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { ormCreateUser as _createUser, generateAccessToken } from '../model/user-orm.js';
+import { ormCreateUser as _createUser, generateAccessToken, generateRefreshAccessToken } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
@@ -70,10 +70,9 @@ export async function authenticateToken(req, res, next) {
     console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1]
     if (token == null) return res.sendStatus(401)
-
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         console.log(err)
-        if (err) return res.sendStatus(403)
+        if (err) return res.status(403)
         req.username = user.username
     })
 
