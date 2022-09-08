@@ -1,7 +1,7 @@
-import { ormCreateUser as _createUser } from '../model/user-orm.js';
-import userModel from '../model/user-model.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { ormCreateUser as _createUser } from '../model/user-orm.js';
+import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
 // get config vars
@@ -50,5 +50,34 @@ export async function loginUser(req, res) {
 
         const token = res.json({ token: jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1800s' }) }); //expire 30 mins
     });
-
 }
+
+export async function authenticateToken(req, res, next) {
+    // Testing auth
+    const posts = [
+        {
+            username: 'david',
+            title: 'Post 1'
+        },
+        {
+            username: 'ethan',
+            title: 'Post 2'
+        }
+    ]
+
+    const authHeader = req.headers['authorization']
+    console.log(authHeader);
+    const token = authHeader && authHeader.split(' ')[1]
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        console.log(err)
+        if (err) return res.sendStatus(403)
+        req.username = user.username
+    })
+
+    console.log(req.username);
+
+    res.json(posts.filter(post => post.username == req.username));
+}
+
