@@ -101,6 +101,8 @@ export async function logout(req, res) {
     const index = refreshTokens.indexOf(req.body.token);
     if (index > -1) { // only splice array when item is found
         refreshTokens.splice(index, 1); // 2nd parameter means remove one item only
+    } else {
+        return res.status(403).json({ message: 'Logout failed!' });
     }
     res.status(200).json({ message: 'Logout successful!' });
 }
