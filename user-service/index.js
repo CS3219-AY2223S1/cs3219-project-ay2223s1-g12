@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createUser } from './controller/user-controller.js';
+import { createUser, deleteUser } from './controller/user-controller.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -13,6 +13,7 @@ const router = express.Router();
 // Controller will contain all the User-defined Routes
 router.get('/', (_, res) => res.send('Hello World from user-service'));
 router.post('/', createUser);
+router.delete('/', deleteUser);
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json');
