@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import {
     ormCreateUser as _createUser,
     generateAccessToken,
@@ -9,9 +7,6 @@ import {
 } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
-
-// get config vars
-dotenv.config();
 
 let refreshTokens = []; // TODO: store refreshTokens in cache/db
 
@@ -90,7 +85,7 @@ export async function authenticateToken(req, res) {
 }
 
 export async function refreshToken(req, res) {
-    const refreshToken = req.body.token
+    const refreshToken = req.body.refreshToken
     if (refreshToken == null) return res.status(401)
     if (!refreshTokens.includes(refreshToken)) {
         return res.status(403).json({ message: 'FORBIDDEN' });
