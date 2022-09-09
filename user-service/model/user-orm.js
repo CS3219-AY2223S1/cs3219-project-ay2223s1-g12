@@ -26,3 +26,10 @@ export function generateRefreshAccessToken(user) {
     return jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1800s' }); //expire 30 mins
 }
 
+export async function verifyAccessToken(token) {
+    return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        console.log(err)
+        if (err) return res.status(403)
+        return user;
+    })
+}
