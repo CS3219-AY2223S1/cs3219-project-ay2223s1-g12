@@ -4,7 +4,8 @@ import {
     ormCreateUser as _createUser,
     generateAccessToken,
     generateRefreshAccessToken,
-    verifyAccessToken
+    verifyAccessToken,
+    verifyRefreshToken
 } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
@@ -55,8 +56,8 @@ export async function loginUser(req, res) {
             return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
         }
 
-        const token = generateAccessToken(user);
-        const refreshToken = generateRefreshAccessToken(user);
+        const token = await generateAccessToken(user);
+        const refreshToken = await generateRefreshAccessToken(user);
         // Store new refresh token in db
         refreshTokens.push(refreshToken);
         res.json({
@@ -94,11 +95,8 @@ export async function refreshToken(req, res) {
     if (!refreshTokens.includes(refreshToken)) {
         return res.status(403).json({ message: 'FORBIDDEN' });
     }
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-        if (err) return res.status(403)
-        const token = generateAccessToken({ username: user.username })
-        res.json({ token: token })
-    })
+    const newAccessToken = await verifyRefreshToken(refreshToken);
+    res.json({ token: newAccessToken });
 }
 
 export async function logout(req, res) {

@@ -18,11 +18,11 @@ export async function ormCreateUser(username, password) {
     }
 }
 
-export function generateAccessToken(user) {
+export async function generateAccessToken(user) {
     return jwt.sign({ username: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' }); //expire 30 mins
 }
 
-export function generateRefreshAccessToken(user) {
+export async function generateRefreshAccessToken(user) {
     return jwt.sign({ username: user.username }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1800s' }); //expire 30 mins
 }
 
@@ -31,5 +31,13 @@ export async function verifyAccessToken(token) {
         console.log(err)
         if (err) return res.status(403)
         return user;
+    })
+}
+
+export async function verifyRefreshToken(refreshToken) {
+    return jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+        if (err) return res.status(403)
+        const token = await generateAccessToken({ username: user.username })
+        return token;
     })
 }
