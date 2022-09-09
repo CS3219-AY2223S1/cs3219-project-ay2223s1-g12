@@ -32,6 +32,13 @@
             {
               "code": 120
             }
+        ],
+
+        "import/extensions": [
+            "error",
+            {
+                "js": "ignorePackages"
+            }
         ]
     }
 }
