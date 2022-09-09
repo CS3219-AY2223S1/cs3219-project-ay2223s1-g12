@@ -4,8 +4,8 @@ import {
     createUser,
     loginUser,
     authenticateToken,
-    refreshToken,
-    logout
+    refreshOldToken,
+    logout,
 } from './controller/user-controller.js';
 
 const app = express();
@@ -21,7 +21,7 @@ const router = express.Router();
 router.get('/', authenticateToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
-router.post('/refreshToken', refreshToken);
+router.post('/refreshToken', refreshOldToken);
 router.delete('/logout', logout);
 
 app.use('/api/user', router).all((_, res) => {

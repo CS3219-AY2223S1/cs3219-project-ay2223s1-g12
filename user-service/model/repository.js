@@ -1,10 +1,10 @@
-import UserModel from './user-model.js';
-import 'dotenv/config';
-
 // Set up mongoose connection
 import mongoose from 'mongoose';
 
-const mongoDB = process.env.ENV == 'PROD' ? process.env.DB_CLOUD_URI : process.env.DB_LOCAL_URI;
+import UserModel from './user-model.js';
+import 'dotenv/config';
+
+const mongoDB = process.env.ENV === 'PROD' ? process.env.DB_CLOUD_URI : process.env.DB_LOCAL_URI;
 
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 

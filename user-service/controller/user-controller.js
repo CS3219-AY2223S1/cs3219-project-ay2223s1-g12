@@ -3,12 +3,12 @@ import {
     generateAccessToken,
     generateRefreshAccessToken,
     verifyAccessToken,
-    verifyRefreshToken
+    verifyRefreshToken,
 } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
-let refreshTokens = []; // TODO: store refreshTokens in cache/db
+const refreshTokens = []; // TODO: store refreshTokens in cache/db
 
 export async function createUser(req, res) {
     try {
@@ -29,10 +29,10 @@ export async function createUser(req, res) {
     }
 }
 export async function loginUser(req, res) {
-    //Check for existing username in db
+    // Check for existing username in db
     userModel.findOne({
-        username: req.body.username
-    }, async function (err, user) {
+        username: req.body.username,
+    }, async (err, user) => {
         if (err) {
             res.status(500).send({ message: err });
             return;
@@ -40,7 +40,7 @@ export async function loginUser(req, res) {
 
         // if user does not exist
         if (!user) {
-            return res.status(401).json({ message: 'Authentication failed. Invalid username.' });
+            res.status(401).json({ message: 'Authentication failed. Invalid username.' });
         }
 
         const hashedPassword = user.password;
@@ -48,7 +48,7 @@ export async function loginUser(req, res) {
 
         // if password mismatch
         if (!isCorrectPassword) {
-            return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
+            res.status(401).json({ message: 'Authentication failed. Invalid password.' });
         }
 
         const token = await generateAccessToken(user);
@@ -56,8 +56,8 @@ export async function loginUser(req, res) {
         // Store new refresh token in db
         refreshTokens.push(refreshToken);
         res.json({
-            token: token,
-            refreshToken: refreshToken
+            token,
+            refreshToken,
         });
     });
 }
@@ -67,33 +67,33 @@ export async function authenticateToken(req, res) {
     const posts = [
         {
             username: 'david',
-            title: 'Post 1'
+            title: 'Post 1',
         },
         {
             username: 'ethan',
-            title: 'Post 2'
-        }
-    ]
+            title: 'Post 2',
+        },
+    ];
 
-    const authHeader = req.headers['authorization']
+    const authHeader = req.headers.authorization;
     console.log(authHeader);
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(401)
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
     const verifiedUser = await verifyAccessToken(token);
 
-    if (!verifiedUser) return res.json({ message: "Authentication failed." });
+    if (!verifiedUser) return res.json({ message: 'Authentication failed.' });
 
-    res.json(posts.filter(post => post.username == verifiedUser.username));
+    return res.json(posts.filter((post) => post.username === verifiedUser.username));
 }
 
-export async function refreshToken(req, res) {
-    const refreshToken = req.body.refreshToken
-    if (refreshToken == null) return res.status(401)
+export async function refreshOldToken(req, res) {
+    const { refreshToken } = req.body;
+    if (refreshToken == null) return res.status(401);
     if (!refreshTokens.includes(refreshToken)) {
         return res.status(403).json({ message: 'FORBIDDEN' });
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
-    res.json({ token: newAccessToken });
+    return res.json({ token: newAccessToken });
 }
 
 export async function logout(req, res) {
@@ -104,6 +104,5 @@ export async function logout(req, res) {
     } else {
         return res.status(403).json({ message: 'Logout failed!' });
     }
-    res.status(200).json({ message: 'Logout successful!' });
+    return res.status(200).json({ message: 'Logout successful!' });
 }
-
