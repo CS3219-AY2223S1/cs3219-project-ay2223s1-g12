@@ -29,14 +29,14 @@ export async function generateRefreshAccessToken(user) {
 export async function verifyAccessToken(token) {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         console.log(err)
-        if (err) return res.status(403)
+        if (err) return undefined
         return user;
     })
 }
 
 export async function verifyRefreshToken(refreshToken) {
     return jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
-        if (err) return res.status(403)
+        if (err) return undefined
         const token = await generateAccessToken({ username: user.username })
         return token;
     })

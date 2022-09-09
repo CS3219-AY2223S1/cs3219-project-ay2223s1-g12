@@ -81,6 +81,8 @@ export async function authenticateToken(req, res) {
     if (token == null) return res.sendStatus(401)
     const verifiedUser = await verifyAccessToken(token);
 
+    if (!verifiedUser) return res.json({ message: "Authentication failed." });
+
     res.json(posts.filter(post => post.username == verifiedUser.username));
 }
 
