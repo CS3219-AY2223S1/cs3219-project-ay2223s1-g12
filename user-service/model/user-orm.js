@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { createUser } from './repository.js';
+import UserModel from './user-model.js';
 
 // get config vars
 dotenv.config();
@@ -15,6 +16,13 @@ export async function ormCreateUser(username, password) {
         console.log('ERROR: Could not create new user');
         return { err };
     }
+}
+
+// Return user from DB if exists
+export async function getUser(username) {
+    return UserModel.findOne({
+        username,
+    });
 }
 
 export async function generateAccessToken(user) {

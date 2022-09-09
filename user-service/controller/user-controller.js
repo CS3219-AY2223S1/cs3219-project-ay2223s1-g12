@@ -4,6 +4,7 @@ import {
     generateRefreshAccessToken,
     verifyAccessToken,
     verifyRefreshToken,
+    getUser,
 } from '../model/user-orm.js';
 import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
@@ -30,35 +31,27 @@ export async function createUser(req, res) {
 }
 export async function loginUser(req, res) {
     // Check for existing username in db
-    userModel.findOne({
-        username: req.body.username,
-    }, async (err, user) => {
-        if (err) {
-            res.status(500).send({ message: err });
-            return;
-        }
+    const user = await getUser(req.body.username);
 
-        // if user does not exist
-        if (!user) {
-            res.status(401).json({ message: 'Authentication failed. Invalid username.' });
-        }
+    // if user does not exist
+    if (!user) {
+        return res.status(401).json({ message: 'Authentication failed. Invalid username.' });
+    }
+    const hashedPassword = user.password;
+    const isCorrectPassword = await verifyPassword(req.body.password, hashedPassword);
 
-        const hashedPassword = user.password;
-        const isCorrectPassword = await verifyPassword(req.body.password, hashedPassword);
+    // if password mismatch
+    if (!isCorrectPassword) {
+        return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
+    }
 
-        // if password mismatch
-        if (!isCorrectPassword) {
-            res.status(401).json({ message: 'Authentication failed. Invalid password.' });
-        }
-
-        const token = await generateAccessToken(user);
-        const refreshToken = await generateRefreshAccessToken(user);
-        // Store new refresh token in db
-        refreshTokens.push(refreshToken);
-        res.json({
-            token,
-            refreshToken,
-        });
+    const token = await generateAccessToken(user);
+    const refreshToken = await generateRefreshAccessToken(user);
+    // Store new refresh token in db
+    refreshTokens.push(refreshToken);
+    return res.json({
+        token,
+        refreshToken,
     });
 }
 
