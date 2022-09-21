@@ -55,6 +55,7 @@ export async function verifyRefreshToken(refreshToken) {
         const token = await generateAccessToken({ username: user.username });
         return token;
     });
+}
 
 export async function ormCheckUserExists(username) {
     try {
