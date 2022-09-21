@@ -5,6 +5,7 @@ import {
     verifyAccessToken,
     verifyRefreshToken,
     getUser,
+    ormCheckUserExists as _checkUserExists,
 } from '../model/user-orm.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
@@ -14,6 +15,13 @@ export async function createUser(req, res) {
     try {
         const { username, password } = req.body;
         if (username && password) {
+
+            const isUserExist = await _checkUserExists(username);
+            if (isUserExist) {
+                console.log(`Account Creation Failed due to duplicate username - ${username}`);
+                return res.status(409).json({ message: 'Duplicate username. Could not create a new user.'});
+            }
+
             const hashedPassword = await hashSaltPassword(password);
             const resp = await _createUser(username, hashedPassword);
             console.log(resp);

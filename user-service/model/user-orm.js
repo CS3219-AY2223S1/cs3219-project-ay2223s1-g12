@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { createUser } from './repository.js';
+import { createUser, findUser } from './repository.js';
 import UserModel from './user-model.js';
 
 // get config vars
@@ -55,4 +55,17 @@ export async function verifyRefreshToken(refreshToken) {
         const token = await generateAccessToken({ username: user.username });
         return token;
     });
+
+export async function ormCheckUserExists(username) {
+    try {
+        const user = await findUser(username);
+        console.log(user);
+        if (user) {
+            return true;
+        }
+        return false;
+    } catch (err) {
+        console.log('ERROR: Could not check for user');
+        return { err };
+    }
 }
