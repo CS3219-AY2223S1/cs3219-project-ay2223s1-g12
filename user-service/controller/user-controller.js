@@ -6,7 +6,6 @@ import {
     verifyRefreshToken,
     getUser,
 } from '../model/user-orm.js';
-import userModel from '../model/user-model.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
 const refreshTokens = []; // TODO: store refreshTokens in cache/db
