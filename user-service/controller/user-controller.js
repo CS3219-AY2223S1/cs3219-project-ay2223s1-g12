@@ -18,7 +18,7 @@ export async function createUser(req, res) {
             const isUserExist = await _checkUserExists(username);
             if (isUserExist) {
                 console.log(`Account Creation Failed due to duplicate username - ${username}`);
-                return res.status(409).json({ message: 'Duplicate username. Could not create a new user.'});
+                return res.status(409).json({ message: 'Duplicate username. Could not create a new user.' });
             }
 
             const hashedPassword = await hashSaltPassword(password);
@@ -55,7 +55,7 @@ export async function loginUser(req, res) {
     const refreshToken = await generateRefreshAccessToken(user);
     // Store new refresh token in db
     refreshTokens.push(refreshToken);
-    return res.json({
+    return res.status(200).json({
         token,
         refreshToken,
     });
