@@ -56,6 +56,7 @@ export async function loginUser(req, res) {
     // Store new refresh token in db
     refreshTokens.push(refreshToken);
     return res.status(200).json({
+        message: 'Login Success!',
         token,
         refreshToken,
     });
