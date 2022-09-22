@@ -1,13 +1,16 @@
 import {
     ormCreateUser as _createUser,
+    getUser,
+    ormCheckUserExists as _checkUserExists,
+} from '../model/user-orm.js';
+import {
+    hashSaltPassword,
+    verifyPassword,
     generateAccessToken,
     generateRefreshAccessToken,
     verifyAccessToken,
     verifyRefreshToken,
-    getUser,
-    ormCheckUserExists as _checkUserExists,
-} from '../model/user-orm.js';
-import { hashSaltPassword, verifyPassword } from '../services.js';
+} from '../services.js';
 
 const allowedRefreshTokens = []; // TODO: store allowedRefreshTokens in cache/db
 
