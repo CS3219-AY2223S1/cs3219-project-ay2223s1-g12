@@ -22,7 +22,7 @@ router.get('/', authenticateToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
 router.post('/refreshToken', refreshOldToken);
-router.delete('/logout', logout);
+router.post('/logout', logout);
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json');

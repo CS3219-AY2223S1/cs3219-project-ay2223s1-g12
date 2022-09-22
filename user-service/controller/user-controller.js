@@ -97,8 +97,10 @@ export async function refreshOldToken(req, res) {
 }
 
 export async function logout(req, res) {
+    // TODO: Remove cookie
+    // TODO: Add to token blacklist
     // Delete refreshToken from cache
-    const index = refreshTokens.indexOf(req.body.token);
+    const index = refreshTokens.indexOf(req.body.refreshToken);
     if (index > -1) { // only splice array when item is found
         refreshTokens.splice(index, 1); // 2nd parameter means remove one item only
     } else {
