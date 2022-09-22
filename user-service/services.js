@@ -39,7 +39,6 @@ export async function generateRefreshAccessToken(user) {
 
 export async function verifyAccessToken(token) {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        console.log(err);
         if (err) return undefined;
         return user;
     });

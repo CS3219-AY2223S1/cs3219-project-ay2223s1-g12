@@ -84,6 +84,8 @@ export async function refreshOldToken(req, res) {
         return res.status(403).json({ message: 'FORBIDDEN' });
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
+    if (!newAccessToken) return res.status(401).json({ message: 'Failed to verify refresh token.' });
+
     return res.json({ token: newAccessToken });
 }
 
