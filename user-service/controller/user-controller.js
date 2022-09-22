@@ -1,15 +1,27 @@
-import { ormCreateUser as _createUser, ormCheckUserExists as _checkUserExists } from '../model/user-orm.js';
-import { hashSaltPassword } from '../services.js';
+import {
+    getUser,
+    ormCreateUser as _createUser,
+    ormCheckUserExists as _checkUserExists,
+} from '../model/user-orm.js';
+import {
+    hashSaltPassword,
+    verifyPassword,
+    generateAccessToken,
+    generateRefreshAccessToken,
+    verifyAccessToken,
+    verifyRefreshToken,
+} from '../services.js';
+
+const allowedRefreshTokens = []; // TODO: store allowedRefreshTokens in cache/db
 
 export async function createUser(req, res) {
     try {
         const { username, password } = req.body;
         if (username && password) {
-
             const isUserExist = await _checkUserExists(username);
             if (isUserExist) {
                 console.log(`Account Creation Failed due to duplicate username - ${username}`);
-                return res.status(409).json({ message: 'Duplicate username. Could not create a new user.'});
+                return res.status(409).json({ message: 'Duplicate username. Could not create a new user.' });
             }
 
             const hashedPassword = await hashSaltPassword(password);
@@ -25,4 +37,65 @@ export async function createUser(req, res) {
     } catch (err) {
         return res.status(500).json({ message: 'Database failure when creating new user!' });
     }
+}
+export async function loginUser(req, res) {
+    // Check for existing username in db
+    const user = await getUser(req.body.username);
+
+    // if user does not exist
+    if (!user) {
+        return res.status(401).json({ message: 'Authentication failed. Invalid username.' });
+    }
+    const hashedPassword = user.password;
+    const isCorrectPassword = await verifyPassword(req.body.password, hashedPassword);
+
+    // if password mismatch
+    if (!isCorrectPassword) {
+        return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
+    }
+
+    const token = await generateAccessToken(user);
+    const refreshToken = await generateRefreshAccessToken(user);
+    // Store new refresh token in db
+    allowedRefreshTokens.push(refreshToken);
+    return res.status(200).json({
+        message: 'Login Success!',
+        token,
+        refreshToken,
+    });
+}
+
+export async function authenticateToken(req, res) {
+    const authHeader = req.headers.authorization;
+    console.log(authHeader);
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
+    const verifiedUser = await verifyAccessToken(token);
+
+    if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });
+
+    return res.status(200).json({ message: `Authenticated ${verifiedUser.username}` });
+}
+
+export async function refreshOldToken(req, res) {
+    const { refreshToken } = req.body;
+    if (refreshToken == null) return res.status(401);
+    if (!allowedRefreshTokens.includes(refreshToken)) {
+        return res.status(403).json({ message: 'FORBIDDEN' });
+    }
+    const newAccessToken = await verifyRefreshToken(refreshToken);
+    return res.json({ token: newAccessToken });
+}
+
+export async function logout(req, res) {
+    // TODO: Remove cookie
+    // TODO: Add to token blacklist
+    // Delete refreshToken from cache
+    const index = allowedRefreshTokens.indexOf(req.body.refreshToken);
+    if (index > -1) { // only splice array when item is found
+        allowedRefreshTokens.splice(index, 1); // 2nd parameter means remove one item only
+    } else {
+        return res.status(403).json({ message: 'Logout failed!' });
+    }
+    return res.status(200).json({ message: 'Logout successful!' });
 }
