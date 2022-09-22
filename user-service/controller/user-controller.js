@@ -9,7 +9,7 @@ import {
 } from '../model/user-orm.js';
 import { hashSaltPassword, verifyPassword } from '../services.js';
 
-const refreshTokens = []; // TODO: store refreshTokens in cache/db
+const allowedRefreshTokens = []; // TODO: store allowedRefreshTokens in cache/db
 
 export async function createUser(req, res) {
     try {
@@ -54,7 +54,7 @@ export async function loginUser(req, res) {
     const token = await generateAccessToken(user);
     const refreshToken = await generateRefreshAccessToken(user);
     // Store new refresh token in db
-    refreshTokens.push(refreshToken);
+    allowedRefreshTokens.push(refreshToken);
     return res.status(200).json({
         message: 'Login Success!',
         token,
@@ -77,7 +77,7 @@ export async function authenticateToken(req, res) {
 export async function refreshOldToken(req, res) {
     const { refreshToken } = req.body;
     if (refreshToken == null) return res.status(401);
-    if (!refreshTokens.includes(refreshToken)) {
+    if (!allowedRefreshTokens.includes(refreshToken)) {
         return res.status(403).json({ message: 'FORBIDDEN' });
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
@@ -88,9 +88,9 @@ export async function logout(req, res) {
     // TODO: Remove cookie
     // TODO: Add to token blacklist
     // Delete refreshToken from cache
-    const index = refreshTokens.indexOf(req.body.refreshToken);
+    const index = allowedRefreshTokens.indexOf(req.body.refreshToken);
     if (index > -1) { // only splice array when item is found
-        refreshTokens.splice(index, 1); // 2nd parameter means remove one item only
+        allowedRefreshTokens.splice(index, 1); // 2nd parameter means remove one item only
     } else {
         return res.status(403).json({ message: 'Logout failed!' });
     }
