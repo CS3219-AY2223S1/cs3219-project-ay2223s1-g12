@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import SignupPage from './components/SignupPage';
-import {Box} from "@mui/material";
+import {Box, Typography} from "@mui/material";
 import LoginPage from "./components/LoginPage";
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
                         <Route exact path="/" element={<Navigate replace to="/signup" />}></Route>
                         <Route path="/signup" element={<SignupPage/>}/>
                         <Route path="/login" element={<LoginPage/>}/>
+                        <Route path="/home" element={<Typography>HOME PAGE PLACEHOLDER</Typography>} />
                     </Routes>
                 </Router>
             </Box>

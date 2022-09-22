@@ -57,6 +57,7 @@ function SignupPage() {
         <Box display={"flex"} flexDirection={"column"} width={"30%"}>
             <Typography variant={"h3"} marginBottom={"2rem"}>Sign Up</Typography>
             <TextField
+                required
                 label="Username"
                 variant="standard"
                 value={username}
@@ -65,6 +66,7 @@ function SignupPage() {
                 autoFocus
             />
             <TextField
+                required
                 label="Password"
                 variant="standard"
                 type="password"

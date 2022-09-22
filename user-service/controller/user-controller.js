@@ -54,6 +54,8 @@ export async function loginUser(req, res) {
         return res.status(401).json({ message: 'Authentication failed. Invalid password.' });
     }
 
+    console.log(`${user.username} has been authenticated at LOGIN`);
+
     const token = await generateAccessToken(user);
     const refreshToken = await generateRefreshAccessToken(user);
     // Store new refresh token in db
