@@ -63,27 +63,15 @@ export async function loginUser(req, res) {
 }
 
 export async function authenticateToken(req, res) {
-    // Testing auth
-    const posts = [
-        {
-            username: 'david',
-            title: 'Post 1',
-        },
-        {
-            username: 'ethan',
-            title: 'Post 2',
-        },
-    ];
-
     const authHeader = req.headers.authorization;
     console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.sendStatus(401);
     const verifiedUser = await verifyAccessToken(token);
 
-    if (!verifiedUser) return res.json({ message: 'Authentication failed.' });
+    if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });
 
-    return res.json(posts.filter((post) => post.username === verifiedUser.username));
+    return res.status(200).json({ message: `Authenticated ${verifiedUser.username}` });
 }
 
 export async function refreshOldToken(req, res) {
