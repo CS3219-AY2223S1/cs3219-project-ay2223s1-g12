@@ -67,7 +67,6 @@ export async function loginUser(req, res) {
 
 export async function authenticateToken(req, res) {
     const authHeader = req.headers.authorization;
-    console.log(authHeader);
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.sendStatus(401);
     const verifiedUser = await verifyAccessToken(token);
@@ -84,6 +83,8 @@ export async function refreshOldToken(req, res) {
         return res.status(403).json({ message: 'FORBIDDEN' });
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
+    if (!newAccessToken) return res.status(401).json({ message: 'Failed to verify refresh token.' });
+
     return res.json({ token: newAccessToken });
 }
 
