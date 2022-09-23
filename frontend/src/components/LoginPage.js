@@ -12,7 +12,6 @@ function LoginPage() {
     const [password, setPassword] = useState("")
     const [errorMsg, setErrorMsg] = useState("")
     const [open, setOpen] = useState(false)
-    const [jwt, setJwt] = useState("");
 
     let navigate = useNavigate();
 
@@ -32,9 +31,6 @@ function LoginPage() {
             })
         // show error when login fails
         // when successful -> set up jwt tokens?
-        console.log(res)
-        setJwt(res.data.token)
-
         if (res && res.status === STATUS_CODE_OK) {
             console.log(`${username} login success`)
             navigate("/home") // placeholder until merge with matching
