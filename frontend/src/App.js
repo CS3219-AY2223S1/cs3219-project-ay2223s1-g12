@@ -1,8 +1,6 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import SignupPage from './components/SignupPage';
 import {Box} from "@mui/material";
-import ChangePasswordPage from "./components/ChangePasswordPage";
-import ChangePasswordButton from "./components/ChangePasswordButton";
 
 function App() {
     return (
