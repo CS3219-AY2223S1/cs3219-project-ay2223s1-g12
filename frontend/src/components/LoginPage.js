@@ -33,7 +33,7 @@ function LoginPage() {
         // when successful -> set up jwt tokens?
         if (res && res.status === STATUS_CODE_OK) {
             console.log(`${username} login success`)
-            navigate("/home") // placeholder until merge with matching
+            navigate("/home", { state: { username: username } }) // placeholder until merge with matching
         }
     }
 
@@ -78,7 +78,6 @@ function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 sx={{ marginBottom: "1rem" }}
-                autoFocus
             />
             <Box display={"flex"} flexDirection={"row"} justifyContent={"flex-end"}>
                 <Button variant={"outlined"} onClick={handleLogin}>Login</Button>

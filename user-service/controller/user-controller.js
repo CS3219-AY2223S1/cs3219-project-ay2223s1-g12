@@ -61,6 +61,7 @@ export async function loginUser(req, res) {
 
     // Store token in cookie
     res.cookie('token', token, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
     return res.status(200).json({
         message: `${user.username} has been authenticated`,
@@ -93,14 +94,18 @@ export async function refreshOldToken(req, res) {
 }
 
 export async function logout(req, res) {
-    // TODO: Remove cookie
     // TODO: Add to token blacklist
     // Delete refreshToken from cache
-    const index = allowedRefreshTokens.indexOf(req.body.refreshToken);
+    const index = allowedRefreshTokens.indexOf(req.cookies.refreshToken);
     if (index > -1) { // only splice array when item is found
         allowedRefreshTokens.splice(index, 1); // 2nd parameter means remove one item only
     } else {
         return res.status(403).json({ message: 'Logout failed!' });
     }
+
+    // Delete cookies
+    res.clearCookie('token');
+    res.clearCookie('refreshToken');
+
     return res.status(200).json({ message: 'Logout successful!' });
 }
