@@ -60,8 +60,8 @@ export async function loginUser(req, res) {
     allowedRefreshTokens.push(refreshToken);
 
     // Store token in cookie
-    res.cookie('token', token, { httpOnly: true });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie('token', token, { expires: new Date(Date.now() + (0.5 * 60 * 1000)), httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { expires: new Date(Date.now() + (30 * 60 * 1000)), httpOnly: true });
 
     return res.status(200).json({
         message: `${user.username} has been authenticated`,
