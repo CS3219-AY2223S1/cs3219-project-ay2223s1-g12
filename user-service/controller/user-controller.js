@@ -89,8 +89,12 @@ export async function loginUser(req, res) {
     const refreshToken = await generateRefreshAccessToken(user);
     // Store new refresh token in db
     allowedRefreshTokens.push(refreshToken);
+
+    // Store token in cookie
+    res.cookie('token', token, { httpOnly: true });
+
     return res.status(200).json({
-        message: 'Login Success!',
+        message: `${user.username} has been authenticated`,
         token,
         refreshToken,
     });
