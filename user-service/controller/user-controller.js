@@ -83,13 +83,14 @@ export async function authenticateToken(req, res) {
 }
 
 // Authenticate Cookie Token
-export async function authenticateCookieToken(req, res) {
+export async function authenticateCookieToken(req, res, next) {
     const { token } = req.cookies;
-    const verifiedUser = await verifyAccessToken(token);
+    if (!token) return res.status(403).json({ message: 'You must be logged in first!' });
 
+    const verifiedUser = await verifyAccessToken(token);
     if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });
 
-    return res.status(200).json({ message: `Authenticated ${verifiedUser.username}` });
+    return next();
 }
 
 export async function refreshOldToken(req, res) {

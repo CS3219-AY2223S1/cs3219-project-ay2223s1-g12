@@ -26,7 +26,7 @@ router.get('/', authenticateCookieToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
 router.post('/refreshToken', refreshOldToken);
-router.post('/logout', logout);
+router.post('/logout', authenticateCookieToken, logout);
 
 app.use('/api/user', router).all((_, res) => {
     res.setHeader('content-type', 'application/json');
