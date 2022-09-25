@@ -20,7 +20,7 @@ function Home(props) {
 
         if (res && res.status === STATUS_CODE_OK) {
             console.log(`${username} logout success`)
-            navigate("/logout") // placeholder until merge with matching
+            navigate("/logout", { state: { success : true } }) // placeholder until merge with matching
         }
     }
 
