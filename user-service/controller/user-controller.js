@@ -70,10 +70,21 @@ export async function loginUser(req, res) {
     });
 }
 
+// Authenticate Bearer Token
 export async function authenticateToken(req, res) {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
     if (token == null) return res.sendStatus(401);
+    const verifiedUser = await verifyAccessToken(token);
+
+    if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });
+
+    return res.status(200).json({ message: `Authenticated ${verifiedUser.username}` });
+}
+
+// Authenticate Cookie Token
+export async function authenticateCookieToken(req, res) {
+    const { token } = req.cookies;
     const verifiedUser = await verifyAccessToken(token);
 
     if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });

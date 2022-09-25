@@ -4,9 +4,9 @@ import cookieParser from 'cookie-parser';
 import {
     createUser,
     loginUser,
-    authenticateToken,
     refreshOldToken,
     logout,
+    authenticateCookieToken,
 } from './controller/user-controller.js';
 
 const app = express();
@@ -21,7 +21,8 @@ const router = express.Router();
 
 // Controller will contain all the User-defined Routes
 // router.get('/', (_, res) => res.send('Hello World from user-service'));
-router.get('/', authenticateToken);
+// router.get('/', authenticateToken);
+router.get('/', authenticateCookieToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
 router.post('/refreshToken', refreshOldToken);
