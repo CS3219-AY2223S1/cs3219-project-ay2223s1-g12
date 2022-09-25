@@ -1,5 +1,4 @@
 import { createUser, findUser } from './repository.js';
-import UserModel from './user-model.js';
 
 // need to separate orm functions from repository to decouple business logic from persistence
 export async function ormCreateUser(username, password) {
@@ -13,16 +12,33 @@ export async function ormCreateUser(username, password) {
     }
 }
 
-// Return user from DB if exists
-export async function getUser(username) {
-    return UserModel.findOne({
-        username,
-    });
+export async function ormUpdateUser(user, changes) {
+    try {
+        const {username, password} = changes;
+        user.username = username;
+        user.password = password;
+        user.save();
+        return true;
+    } catch (err) {
+        console.log('ERROR: Could not update user');
+        return { err };
+    }
+}
+
+export async function ormFindUser(username) {
+    try {
+        const user = await findUser(username);
+        console.log(user);
+        return user;
+    } catch (err) {
+        console.log('ERROR: Could not find user');
+        return { err };
+    }
 }
 
 export async function ormCheckUserExists(username) {
     try {
-        const user = await findUser(username);
+        const user = await ormFindUser(username);
         console.log(user);
         if (user) {
             return true;

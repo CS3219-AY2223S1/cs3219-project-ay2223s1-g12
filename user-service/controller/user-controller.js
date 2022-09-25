@@ -1,7 +1,8 @@
 import {
-    getUser,
     ormCreateUser as _createUser,
     ormCheckUserExists as _checkUserExists,
+    ormFindUser as _findUser,
+    ormUpdateUser as _updateUser
 } from '../model/user-orm.js';
 import {
     hashSaltPassword,
@@ -38,9 +39,39 @@ export async function createUser(req, res) {
         return res.status(500).json({ message: 'Database failure when creating new user!' });
     }
 }
+
+export async function changePassword(req, res) {
+    try {
+        const {username, oldPassword, newPassword} = req.body;
+        if (username && oldPassword && newPassword) {
+            // verify user old password is correct
+            const user = await _findUser(username);
+            if (!user) {
+                return res.status(400).json({ message: 'Authentication failed. User does not exist.'})
+            }
+            const isPasswordCorrect = await verifyPassword(oldPassword, user.password);
+            if (!isPasswordCorrect) {
+                return res.status(400).json({ message: 'Authentication failed. Incorrect user or password provided.'})
+            }
+            console.log(`User ${username} has been authenticated.`);
+            // store new password
+            const hashedNewPassword = await hashSaltPassword(newPassword);
+            const resp = await _updateUser(user, {username: username, password: hashedNewPassword});
+            if (resp.err) {
+                return res.status(400).json({ message: 'Could not update password!' });
+            }
+            console.log(`Updated password for user - ${username}`);
+            return res.status(200).json({ message: 'Password has successfully been changed.'});
+        }
+        return res.status(400).json({ message: 'Username and/or Passwords are missing!'});
+    } catch (err) {
+        return res.status(500).json({ message: 'Database failure when updating user password!'});
+    }
+}
+
 export async function loginUser(req, res) {
     // Check for existing username in db
-    const user = await getUser(req.body.username);
+    const user = await _findUser(req.body.username);
 
     // if user does not exist
     if (!user) {
