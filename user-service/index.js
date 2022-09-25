@@ -21,8 +21,6 @@ const router = express.Router();
 
 // Controller will contain all the User-defined Routes
 // router.get('/', (_, res) => res.send('Hello World from user-service'));
-// router.get('/', authenticateToken);
-router.get('/', authenticateCookieToken);
 router.post('/', createUser);
 router.post('/login', loginUser);
 router.post('/refreshToken', refreshOldToken);
