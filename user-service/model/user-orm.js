@@ -29,9 +29,10 @@ export async function ormDeleteUser(username) {
 export async function ormUpdateUser(user, changes) {
     try {
         const { username, password } = changes;
-        user.username = username;
-        user.password = password;
-        user.save();
+        const updatedUser = user;
+        updatedUser.username = username;
+        updatedUser.password = password;
+        updatedUser.save();
         return true;
     } catch (err) {
         console.log('ERROR: Could not update user');

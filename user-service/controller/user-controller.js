@@ -3,7 +3,7 @@ import {
     ormCheckUserExists as _checkUserExists,
     ormFindUser as _findUser,
     ormUpdateUser as _updateUser,
-    ormDeleteUser as _deleteUser
+    ormDeleteUser as _deleteUser,
 } from '../model/user-orm.js';
 import {
     hashSaltPassword,
@@ -67,11 +67,11 @@ export async function changePassword(req, res) {
             // verify user old password is correct
             const user = await _findUser(username);
             if (!user) {
-                return res.status(400).json({ message: 'Authentication failed. User does not exist.' })
+                return res.status(400).json({ message: 'Authentication failed. User does not exist.' });
             }
             const isPasswordCorrect = await verifyPassword(oldPassword, user.password);
             if (!isPasswordCorrect) {
-                return res.status(400).json({ message: 'Authentication failed. Incorrect user or password provided.' })
+                return res.status(400).json({ message: 'Authentication failed. Incorrect user or password provided.' });
             }
             console.log(`User ${username} has been authenticated.`);
             // store new password
