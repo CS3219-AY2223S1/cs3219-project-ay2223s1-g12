@@ -16,7 +16,9 @@
     "url": "https://github.com/CS3219-AY2223S1/cs3219-project-ay2223s1-g12/issues"
   },
   "homepage": "https://github.com/CS3219-AY2223S1/cs3219-project-ay2223s1-g12#readme",
-  "dependencies": {},
+  "dependencies": {
+    "socket.io": "^4.5.1"
+  },
   "devDependencies": {
     "eslint": "^8.23.0",
     "eslint-config-airbnb": "^19.0.4",
