@@ -5,7 +5,6 @@ import {
     createUser,
     deleteUser,
     loginUser,
-    refreshOldToken,
     logout,
     authenticateCookieToken,
     changePassword,
@@ -27,7 +26,6 @@ router.post('/', createUser);
 router.delete('/', authenticateCookieToken, deleteUser, logout);
 router.post('/changePassword', changePassword);
 router.post('/login', loginUser);
-router.post('/refreshToken', refreshOldToken);
 router.post('/logout', authenticateCookieToken, logout);
 
 app.use('/api/user', router).all((_, res) => {

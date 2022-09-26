@@ -150,19 +150,10 @@ export async function authenticateCookieToken(req, res, next) {
     const verifiedUser = await verifyAccessToken(token);
     // If Token expired
     if (!verifiedUser) {
-        const { refreshToken } = req.cookies;
-        const newAccessToken = await verifyRefreshToken(refreshToken);
-        if (newAccessToken) { // un-expired refresh token
-            // Refresh token is blacklisted
-            if (!allowedRefreshTokens.includes(refreshToken)) {
-                return res.status(403).json({ message: 'FORBIDDEN' });
-            }
-
-            // Issue new token
-            res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (0.5 * 60 * 1000)), httpOnly: true });
-        } else {
-            return res.status(401).json({ message: 'Refresh token expired' });
-        }
+        console.log('token expired', token);
+        const newAccessToken = await refreshOldToken(req, res);
+        res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (30 * 60 * 1000)), httpOnly: true });
+        console.log('issued new token', newAccessToken);
     }
 
     // If Token blacklisted
@@ -181,14 +172,9 @@ export async function refreshOldToken(req, res) {
         return res.status(403).json({ message: 'FORBIDDEN' });
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
-    if (!newAccessToken) return res.status(401).json({ message: 'Failed to verify refresh token.' });
+    if (!newAccessToken) return res.status(401).json({ message: 'Refresh token expired.' });
 
-    res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (0.5 * 60 * 1000)), httpOnly: true });
-
-    return res.json({
-        message: 'New access token issued!',
-        token: newAccessToken,
-    });
+    return newAccessToken;
 }
 
 export async function logout(req, res) {
