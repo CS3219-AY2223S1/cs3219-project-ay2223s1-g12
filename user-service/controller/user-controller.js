@@ -119,7 +119,7 @@ export async function loginUser(req, res) {
     allowedRefreshTokens.push(refreshToken);
 
     // Store token in cookie
-    res.cookie('token', token, { expires: new Date(Date.now() + (0.5 * 60 * 1000)), httpOnly: true });
+    res.cookie('token', token, { expires: new Date(Date.now() + (30 * 60 * 1000)), httpOnly: true });
     res.cookie('refreshToken', refreshToken, { expires: new Date(Date.now() + (30 * 60 * 1000)), httpOnly: true });
 
     return res.status(200).json({
@@ -144,14 +144,28 @@ export async function authenticateToken(req, res) {
 // Authenticate Cookie Token
 export async function authenticateCookieToken(req, res, next) {
     const { token } = req.cookies;
-    // Cookie expired
+    // If Cookie expired
     if (!token) return res.status(403).json({ message: 'You must be logged in first!' });
 
-    // Token expired
     const verifiedUser = await verifyAccessToken(token);
-    if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });
+    // If Token expired
+    if (!verifiedUser) {
+        const { refreshToken } = req.cookies;
+        const newAccessToken = await verifyRefreshToken(refreshToken);
+        if (newAccessToken) { // un-expired refresh token
+            // Refresh token is blacklisted
+            if (!allowedRefreshTokens.includes(refreshToken)) {
+                return res.status(403).json({ message: 'FORBIDDEN' });
+            }
 
-    // Token blacklisted
+            // Issue new token
+            res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (0.5 * 60 * 1000)), httpOnly: true });
+        } else {
+            return res.status(401).json({ message: 'Refresh token expired' });
+        }
+    }
+
+    // If Token blacklisted
     const index = blacklistedTokens.indexOf(token);
     if (index > -1) { // Token is blacklisted
         return res.status(403).json({ message: 'Token blacklisted' });
@@ -161,7 +175,7 @@ export async function authenticateCookieToken(req, res, next) {
 }
 
 export async function refreshOldToken(req, res) {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.cookies;
     if (refreshToken == null) return res.status(401);
     if (!allowedRefreshTokens.includes(refreshToken)) {
         return res.status(403).json({ message: 'FORBIDDEN' });
@@ -169,7 +183,12 @@ export async function refreshOldToken(req, res) {
     const newAccessToken = await verifyRefreshToken(refreshToken);
     if (!newAccessToken) return res.status(401).json({ message: 'Failed to verify refresh token.' });
 
-    return res.json({ token: newAccessToken });
+    res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (0.5 * 60 * 1000)), httpOnly: true });
+
+    return res.json({
+        message: 'New access token issued!',
+        token: newAccessToken,
+    });
 }
 
 export async function logout(req, res) {
