@@ -152,6 +152,9 @@ export async function authenticateCookieToken(req, res, next) {
     if (!verifiedUser) {
         console.log('token expired', token);
         const newAccessToken = await refreshOldToken(req, res);
+
+        if (!newAccessToken) return res.status(403).json({ message: 'FORBIDDEN, refreshToken not whitelisted' });
+
         res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (30 * 60 * 1000)), httpOnly: true });
         console.log('issued new token', newAccessToken);
     }
@@ -169,7 +172,7 @@ export async function refreshOldToken(req, res) {
     const { refreshToken } = req.cookies;
     if (refreshToken == null) return res.status(401);
     if (!allowedRefreshTokens.includes(refreshToken)) {
-        return res.status(403).json({ message: 'FORBIDDEN' });
+        return undefined;
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
     if (!newAccessToken) return res.status(401).json({ message: 'Refresh token expired.' });
