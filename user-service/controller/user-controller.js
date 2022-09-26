@@ -41,21 +41,28 @@ export async function createUser(req, res) {
     }
 }
 
-export async function deleteUser(req, res) {
+export async function deleteUser(req, res, next) {
     try {
         // delete the user by using username (alt: _id)
         const { username } = req.body;
 
-        // TODO: verify if user exists in database
+        // verify if user exists in database
+        const user = await _findUser(username);
+        if (!user) {
+            return res.status(404).json({ message: 'Account deletion failed. User does not exist.' });
+        }
 
         // TODO: blacklist the token so that user cannot log in with the same token again
+        // Done in next() callback to logout
 
         const resp = await _deleteUser(username);
         if (resp.err) {
             return res.status(400).json({ message: 'Could not delete the user!' });
         }
         console.log(`Successfully deleted user - ${username}`);
-        return res.status(200).json({ message: 'User account has been deleted!' });
+        // res.status(200).json({ message: 'User account has been deleted!' });
+
+        return next();
     } catch (err) {
         return res.status(500).json({ message: 'Database failure when deleting user!' });
     }
