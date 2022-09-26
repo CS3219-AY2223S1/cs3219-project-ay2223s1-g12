@@ -46,6 +46,11 @@ export async function deleteUser(req, res, next) {
     try {
         // delete the user by using username (alt: _id)
         const { username } = req.body;
+        const { loggedInUser } = req;
+
+        if (loggedInUser !== username) {
+            return res.status(403).json({ message: 'Forbidden to delete a user that is not yourself!' });
+        }
 
         // verify if user exists in database
         const user = await _findUser(username);
@@ -156,7 +161,6 @@ export async function authenticateCookieToken(req, res, next) {
         if (newAccessToken.error) {
             return res.status(newAccessToken.status).json({ message: newAccessToken.error });
         }
-        
 
         res.cookie('token', newAccessToken, { expires: new Date(Date.now() + (30 * 60 * 1000)), httpOnly: true });
         console.log('issued new token', newAccessToken);
@@ -168,6 +172,8 @@ export async function authenticateCookieToken(req, res, next) {
         return res.status(403).json({ message: 'Token blacklisted' });
     }
 
+    req.loggedInUser = verifiedUser.username;
+
     return next();
 }
 
@@ -175,11 +181,11 @@ export async function refreshOldToken(req, res) {
     const { refreshToken } = req.cookies;
     if (refreshToken == null) return res.status(401);
     if (!allowedRefreshTokens.includes(refreshToken)) {
-        return { error: 'FORBIDDEN, refreshToken not whitelisted', status: 403};
+        return { error: 'FORBIDDEN, refreshToken not whitelisted', status: 403 };
     }
     const newAccessToken = await verifyRefreshToken(refreshToken);
     if (!newAccessToken) {
-        return { error: 'Refresh token expired.', status: 401};
+        return { error: 'Refresh token expired.', status: 401 };
     }
 
     return newAccessToken;
