@@ -15,6 +15,7 @@ import {
 } from '../services.js';
 
 const allowedRefreshTokens = []; // TODO: store allowedRefreshTokens in cache/db
+const blacklistedTokens = [];
 
 export async function createUser(req, res) {
     try {
@@ -150,6 +151,12 @@ export async function authenticateCookieToken(req, res, next) {
     const verifiedUser = await verifyAccessToken(token);
     if (!verifiedUser) return res.status(401).json({ message: 'Authentication failed.' });
 
+    // Token blacklisted
+    const index = blacklistedTokens.indexOf(token);
+    if (index > -1) { // Token is blacklisted
+        return res.status(403).json({ message: 'Token blacklisted' });
+    }
+
     return next();
 }
 
@@ -166,7 +173,8 @@ export async function refreshOldToken(req, res) {
 }
 
 export async function logout(req, res) {
-    // TODO: Add to token blacklist
+    // Add to token blacklist
+    blacklistedTokens.push(req.cookies.token);
     // Delete refreshToken from cache
     const index = allowedRefreshTokens.indexOf(req.cookies.refreshToken);
     if (index > -1) { // only splice array when item is found
