@@ -46,6 +46,11 @@ export async function deleteUser(req, res, next) {
     try {
         // delete the user by using username (alt: _id)
         const { username } = req.body;
+        const { loggedInUser } = req;
+
+        if (loggedInUser !== username) {
+            return res.status(403).json({ message: 'Forbidden to delete a user that is not yourself!' });
+        }
 
         // verify if user exists in database
         const user = await _findUser(username);
@@ -156,6 +161,8 @@ export async function authenticateCookieToken(req, res, next) {
     if (index > -1) { // Token is blacklisted
         return res.status(403).json({ message: 'Token blacklisted' });
     }
+
+    req.loggedInUser = verifiedUser.username;
 
     return next();
 }
