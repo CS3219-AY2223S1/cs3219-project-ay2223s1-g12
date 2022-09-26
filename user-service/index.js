@@ -24,7 +24,7 @@ const router = express.Router();
 // router.get('/', (_, res) => res.send('Hello World from user-service'));
 router.post('/', createUser);
 router.delete('/', authenticateCookieToken, deleteUser, logout);
-router.post('/changePassword', changePassword);
+router.post('/changePassword', authenticateCookieToken, changePassword);
 router.post('/login', loginUser);
 router.post('/logout', authenticateCookieToken, logout);
 
