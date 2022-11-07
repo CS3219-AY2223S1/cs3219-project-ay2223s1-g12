@@ -9,7 +9,7 @@ import './CountdownView.css';
 
 // history service
 import Cookies from 'js-cookie';
-import { updateAttemptedQuestions } from '../../Util';
+import { updateAttemptedQuestions } from '../../Util.js';
 
 function CountdownView(props) {
     const [username, setUsername] = useState(Cookies.get('username'));
@@ -61,7 +61,7 @@ function CountdownView(props) {
             console.log(socket.connected); // true
         });
 
-        socket.once("match-success", async (firstClientSocketId, secondClientSocketId, questionData) => {
+        socket.on("match-success", async (firstClientSocketId, secondClientSocketId, questionData) => {
             setMatchingStatus('match-success');
             console.log(firstClientSocketId);
             console.log('iguana', questionData.question.QuestionTitle);
@@ -75,6 +75,10 @@ function CountdownView(props) {
             });
         }
         );
+
+        return () => {
+            socket.off("match-success");
+        } 
     }, []);
 
     if (!props.show) {

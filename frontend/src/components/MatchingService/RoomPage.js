@@ -105,8 +105,8 @@ export default function RoomPage() {
             await updateAttemptedQuestions(username, question.question.QuestionTitle, question.question.QuestionDifficulty);
         });
 
-
         return () => {
+            socket.off("update-question");
             socket.disconnect();
             window.sessionStorage.clear();
             socket.connect();
