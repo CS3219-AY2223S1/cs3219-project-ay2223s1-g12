@@ -15,7 +15,6 @@ export const updateAttemptedQuestions = async (username, QuestionTitle, Question
     await axios.put(URL_HISTORY_SVC + '/' + username,
         { 'questionTitle': QuestionTitle, 'questionDifficulty': QuestionDifficulty })
         .then(response => {
-            console.log(response);
             console.log('History update success for ' + QuestionTitle);
         })
         .catch((err) => {
