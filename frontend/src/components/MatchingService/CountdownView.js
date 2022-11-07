@@ -61,7 +61,7 @@ function CountdownView(props) {
             console.log(socket.connected); // true
         });
 
-        socket.on("match-success", async (firstClientSocketId, secondClientSocketId, questionData) => {
+        socket.once("match-success", async (firstClientSocketId, secondClientSocketId, questionData) => {
             setMatchingStatus('match-success');
             console.log(firstClientSocketId);
             console.log('iguana', questionData.question.QuestionTitle);
