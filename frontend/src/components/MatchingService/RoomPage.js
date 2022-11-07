@@ -55,7 +55,7 @@ export default function RoomPage() {
 
     useEffect( () => {
         ensureLoggedIn(navigate);
-    });
+    }, []);
 
     console.log(location);
   
