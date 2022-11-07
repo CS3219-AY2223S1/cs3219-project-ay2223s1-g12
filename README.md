@@ -1,3 +1,8 @@
+
+# CS3219-AY22-23-G12
+
+![example event parameter](https://github.com/Punpun1643/PeerPrep/actions/workflows/main.yml/badge.svg?event=push)
+
 ## Local deployment (dockerized)
 
 ### Set-up:
@@ -19,3 +24,11 @@
    docker-compose down
    ```
 
+### Note:
+To switch from dockerized version to local development, 
+1. Go to the root directory of the repository.
+2. Run the following command:
+   ```bash 
+   cd matching-service/controller/socketHandler
+   ```
+3. Open `pendingMatchHandler.js` and set `isDockerized` toggle to false.

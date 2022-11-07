@@ -27,3 +27,18 @@
     color: white;
     font-size: 44px;
 }
+
+.peerPrepBrandLoginWrapper {
+    display: flex;
+    align-items: center;
+
+}
+
+.peerPrepLogoLogin {
+    height: 80px;
+    padding: 8px;
+}
+
+.brandTagWrapper {
+    margin-left: -20px;
+}

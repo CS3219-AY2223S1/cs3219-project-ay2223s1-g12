@@ -1,6 +1,8 @@
 import pendingMatchController from '../pendingMatchController.js';
 import axios from 'axios';
 
+let isDockerized = true;
+
 const pendingMatchHandler = (io) => {
     io.on('connection', (socket) => {
         console.log(`socket id is ${socket.id}`);
@@ -19,7 +21,7 @@ const pendingMatchHandler = (io) => {
 
                 //retrive easy question by sending a GET API to question-service
                 //NOTE: use this url instead if running locally without docker: 'http://localhost:8002/api/questions/?level=easy'
-                axios.get('http://question-service:8002/api/questions/?level=easy')
+                axios.get(isDockerized ? 'http://question-service:8002/api/questions/?level=easy':  'http://localhost:8002/api/questions/?level=easy' )
                     .then(response => {
                         question = response.data;
                         // emit succcess event to the matched users
@@ -53,7 +55,8 @@ const pendingMatchHandler = (io) => {
 
                 //retrive medium question by sending a GET API to question-service
                 //NOTE: use this url instead if running locally without docker: 'http://localhost:8002/api/questions/?level=medium'
-                axios.get('http://question-service:8002/api/questions/?level=medium')
+                axios.get( isDockerized ? 'http://question-service:8002/api/questions/?level=medium'
+                                        : 'http://localhost:8002/api/questions/?level=medium')
                     .then(response => {
                         question = response.data;
                         io.to(socket.id).emit('match-success', currentSocketId, socket.id, question);
@@ -79,7 +82,8 @@ const pendingMatchHandler = (io) => {
 
                 //retrive hard question by sending a GET API to question-service
                 //NOTE: use this url instead if running locally without docker: 'http://localhost:8002/api/questions/?level=hard'
-                axios.get('http://question-service:8002/api/questions/?level=hard')
+                axios.get(isDockerized ? 'http://question-service:8002/api/questions/?level=hard'
+                                       :'http://localhost:8002/api/questions/?level=hard')
                     .then(response => {
                         question = response.data;
                         io.to(socket.id).emit('match-success', currentSocketId, socket.id, question);
@@ -106,6 +110,55 @@ const pendingMatchHandler = (io) => {
         socket.on('leave-room', async (socketRoomId) => {
             socket.leave(socketRoomId);
         });
+
+        // refresh question 
+        socket.on('refresh-question', async (socketRoomId, questionDifficulty, questionTitle) => {
+            console.log(questionDifficulty);
+            console.log(questionTitle);
+            let question; 
+
+            if (questionDifficulty == 'easy') {
+                axios.get( isDockerized ? 'http://question-service:8002/api/questions/generateNew/?level=easy'
+                                        : 'http://localhost:8002/api/questions/generateNew/?level=easy', {
+                    data: {
+                        currQuestionTitle : questionTitle
+                    }
+                }).then(response => {
+                    question = response.data;
+                    io.to(socketRoomId).emit('update-question', question);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            } else if (questionDifficulty == 'medium') {
+                axios.get( isDockerized ? 'http://question-service:8002/api/questions/generateNew/?level=medium'
+                                        : 'http://localhost:8002/api/questions/generateNew/?level=medium', {
+                    data: {
+                        currQuestionTitle : questionTitle
+                    }
+                }).then(response => {
+                    question = response.data;
+                    io.to(socketRoomId).emit('update-question', question);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            } else {
+                axios.get( isDockerized ? 'http://question-service:8002/api/questions/generateNew/?level=hard'
+                                        : 'http://localhost:8002/api/questions/generateNew/?level=easy', {
+                    data: {
+                        currQuestionTitle : questionTitle
+                    }
+                }).then(response => {
+                    question = response.data;
+                    io.to(socketRoomId).emit('update-question', question);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            }
+           
+        })
     });
 };
 

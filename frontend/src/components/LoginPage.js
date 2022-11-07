@@ -11,6 +11,8 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import './LoginPage.css';
 
+import logo from '../assets/peerPrepLogo.png';
+
 function LoginPage() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState("")
@@ -66,7 +68,10 @@ function LoginPage() {
             <div className="loginPage">
                 <div className="loginWrap">
                     <div className="brandTagWrapper">
+                        <div className="peerPrepBrandLoginWrapper">
+                        <img className="peerPrepLogoLogin" src={logo} alt="Logo" />
                         <p className="brandTag">PeerPrep</p>
+                        </div>
                     </div>
                     <div className="welcomeTagWrapper">
                         <p className="welcomeTag">Good to see you again! 👋</p>

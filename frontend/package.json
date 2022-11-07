@@ -19,7 +19,6 @@
     "@uiw/codemirror-theme-dracula": "^4.12.4",
     "@uiw/react-codemirror": "^4.12.4",
     "axios": "^0.27.2",
-    "js-cookie": "^3.0.1",
     "codemirror": "^5.65.9",
     "ityped": "^1.0.3",
     "js-cookie": "^3.0.1",
@@ -30,6 +29,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-split-grid": "^1.0.4",
     "socket.io-client": "^4.5.2",
     "web-vitals": "^2.1.4",
     "y-codemirror": "^3.0.1",
@@ -38,10 +38,12 @@
     "yjs": "^13.5.41"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "lint": "npx eslint ."
+    "start": "CI=false react-scripts start",
+    "build": "CI=false react-scripts build",
+    "test": "start-server-and-test start http://localhost:3000 cy:run",
+    "lint": "npx eslint .",
+    "cypress:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "eslintConfig": {
     "extends": [
@@ -62,7 +64,9 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^10.11.0",
     "eslint": "^8.21.0",
-    "eslint-plugin-react": "^7.30.1"
+    "eslint-plugin-react": "^7.30.1",
+    "start-server-and-test": "^1.14.0"
   }
 }

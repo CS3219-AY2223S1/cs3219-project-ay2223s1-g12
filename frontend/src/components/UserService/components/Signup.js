@@ -64,7 +64,7 @@ function Signup() {
                     <Typography className="signupHeader" variant={"h3"} marginBottom={"2rem"}>Sign Up</Typography>
                     <div className="inputWrapper">
                         <TextField
-                            className="userInput"
+                            className="userInputUsername"
                             required
                             label="Username"
                             variant="outlined"
@@ -75,7 +75,7 @@ function Signup() {
                             autoFocus
                         />
                         <TextField
-                            className="userInput"
+                            className="userInputPassword"
                             error={!(verifyPassword(password) || password === '')} 
                             required
                             label="Password"
@@ -93,6 +93,7 @@ function Signup() {
                     <div className="button">
                         <Box display={"flex"} flexDirection={"column"}>
                             <Button 
+                                className="signupButton"
                                 style={{backgroundColor: "#3370FF"}}
                                 variant={"contained"} 
                                 onClick={handleSignup} 

@@ -17,6 +17,12 @@ services:
     restart: always
     ports:
       - "8000:8000"
+  
+  history-service:
+    build: ./history-service
+    restart: always
+    ports:
+      - "8004:8004"
 
   question-service:
     build: ./question-service
@@ -39,5 +45,6 @@ services:
       - "8001:8001"
     depends_on:
       - question-service
+
     
   

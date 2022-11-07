@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 
 import './SignupPage.css';
+import logo from '../assets/peerPrepLogo.png';
 
 function SignupPage() {
 
@@ -28,7 +29,10 @@ function SignupPage() {
                 <Grid xs={6} className="taglineDivider">
                     <div className="tagline">
                         <div className="taglineWrapper">
-                            <h1 className="header">PeerPrep</h1>
+                            <div className="peerPrepBrandWrapper">
+                                <img className="peerPrepLogoSignup" src={logo} alt="Logo" />
+                                <h1 className="header">PeerPrep</h1>
+                            </div>
                             <p className="subHeader" ref={textRef}></p>
                         </div>
                     </div>

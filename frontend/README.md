@@ -1,3 +1,6 @@
+![example event parameter](https://github.com/CS3219-AY2223S1/cs3219-project-ay2223s1-g12/actions/workflows/main.yml/badge.svg?event=push)
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

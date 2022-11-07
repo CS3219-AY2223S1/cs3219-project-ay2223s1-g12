@@ -17,12 +17,29 @@
     flex: 11;
 }
 
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: white;
+    -webkit-box-shadow: none;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: none;
+}
 .chatBoxBottom {
-    margin-top: 5px;
+    margin-top: 4px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex: 1;
+    margin-bottom: 4px;
 }
 
 .chatMessageInput {

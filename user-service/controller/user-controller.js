@@ -31,7 +31,7 @@ export async function createUser(req, res) {
             if (!verifyPasswordStrength(password)) {
                 return res.status(400).json({
                     message: 'Password does not meet password strength requirement. '
-                    + 'Passwords should contain at least 8 characters and is a combination of numbers and alphabets.',
+                    + 'Passwords should contain at least one number and one alphabet, and must be at least 8 characters.',
                 });
             }
 
@@ -104,7 +104,7 @@ export async function changePassword(req, res) {
             if (!verifyPasswordStrength(newPassword)) {
                 return res.status(400).json({
                     message: 'New password does not meet password strength requirement. '
-                    + 'Passwords should contain at least 8 characters and is a combination of numbers and alphabets.',
+                    + 'Passwords should contain at least one number and one alphabet, and must be at least 8 characters.',
                 });
             }
 

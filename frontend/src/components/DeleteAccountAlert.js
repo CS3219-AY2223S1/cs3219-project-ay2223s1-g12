@@ -13,6 +13,8 @@ import { URL_USER_SVC } from "../configs";
 import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 
+import './DeleteAccount.css';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -52,8 +54,8 @@ export default function AlertDialogSlide() {
     }
 
     return (
-        <div>
-            <Button variant="text" onClick={handleClickOpen}>
+        <React.Fragment>
+            <Button variant="text" onClick={handleClickOpen} style={{ color: "#3370FF" }}>
                 Delete Account
             </Button>
             <Dialog
@@ -63,17 +65,17 @@ export default function AlertDialogSlide() {
                 onClose={handleClose}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>{"Delete Account?"}</DialogTitle>
+                <DialogTitle style={{ fontWeight: "bold" }}>{"Delete Account?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
                         Are you sure you want to delete your account?
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={handleDeleteAccount}>Agree</Button>
+                <DialogActions style={{ padding: "16px"}}>
+                    <Button onClick={handleClose} style={{ borderRadius: "20px", backgroundColor: "#3370FF", color: "white", width: "90px"}}>Disagree</Button>
+                    <Button onClick={handleDeleteAccount} style={{ borderRadius: "20px", backgroundColor: "#FF3152", color:"white", width: "90px" }}>Agree</Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </React.Fragment>
     );
 }

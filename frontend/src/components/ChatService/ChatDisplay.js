@@ -45,9 +45,12 @@ const ChatDisplay = (props) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        socket.emit('message-from-client', { roomId: roomId, text: newMessage, socketid: socket.id });
-        setNewMessage('');
+        if (newMessage.trim().length !== 0) {
+            socket.emit('message-from-client', { roomId: roomId, text: newMessage, socketid: socket.id });
+            setNewMessage('');
+        }
+        // socket.emit('message-from-client', { roomId: roomId, text: newMessage, socketid: socket.id });
+        // setNewMessage('');
     }
 
     const handleKeyPress = (event) => {

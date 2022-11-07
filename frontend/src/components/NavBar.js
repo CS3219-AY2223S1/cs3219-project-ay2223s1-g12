@@ -1,6 +1,4 @@
 import { AppBar, Box, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from "@mui/material";
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +7,10 @@ import { URL_USER_SVC } from "../configs";
 import DeleteAccountAlert from "./DeleteAccountAlert";
 import Button from '@mui/material/Button';
 import Cookies from 'js-cookie';
+
+import './NavBar.css';
+
+import logo from '../assets/peerPrepLogo.png';
 
 function NavBar() {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -44,19 +46,29 @@ function NavBar() {
         }
     }
 
+    const handleHome = (e) => {
+        navigate("/home");
+    }
+
+    const handleFindMatch = (e) => {
+        navigate("/selectquestiondifficulty");
+    }
+
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="sticky">
+            <AppBar className="peerPrepNavbar" position="sticky" style={{ backgroundColor: "#3370FF" }}>
                 <Toolbar>
-                    <Typography variant="h6" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}>
-                        PeerPrep
+                    <img className="peerPrepLogo" src={logo} alt="Logo" />
+                    <Typography variant="h6" sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }} style={{ fontWeight: "bold" }}>
+                        
+                        <p className="logo" onClick={handleHome}>PeerPrep</p>
+                     
                     </Typography>
+               
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open User Settings">
-                            <IconButton onClick={handleOpenUserSettings}>
-                                <SettingsIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <Button className="navbarOption" color="inherit" onClick={handleHome} style={{ borderRadius: "20px", margin: "4px"}}>Home</Button>
+                        <Button className="navbarOption" color="inherit" onClick={handleFindMatch} style={{ borderRadius: "20px", margin: "4px"}}>Find match</Button>
+                        <Button className="navbarOption" color="inherit" onClick={handleOpenUserSettings} style={{ borderRadius: "20px", margin: "4px"}}>Settings</Button>
 
                         <Menu
                             sx={{ mt: '45px' }}
@@ -75,24 +87,16 @@ function NavBar() {
                             onClose={handleCloseUserSettings}
                         >
                             <MenuItem onClick={handleCloseUserSettings}>
-                                <Button variant="text" style={{ textAlign: "center" }} color="primary">
-                                    <Link to="/changePassword" style={{ textDecoration: "none" }}>Change Password</Link>
+                                <Button style={{ textAlign: "center" }}>
+                                    <Link to="/changePassword" style={{ textDecoration: "none", color:"#3370FF"}}>Change Password</Link>
                                 </Button>
                             </MenuItem>
                             <MenuItem onClick={handleCloseUserSettings}>
-                                {/* <Typography variant="text" textAlign="center" color="primary">
-                                    Delete Account
-                                </Typography> */}
                                 <DeleteAccountAlert />
                             </MenuItem>
 
                         </Menu>
-                        <Tooltip title="Logout">
-                            <IconButton onClick={handleLogout}>
-                                <LogoutIcon />
-                            </IconButton>
-                        </Tooltip>
-
+                            <Button className="logoutButton" color="inherit" onClick={handleLogout} style={{ borderRadius: "20px", outline: "1px solid white", margin: "4px" }}>Logout</Button>
                     </Box>
                 </Toolbar>
             </AppBar>
