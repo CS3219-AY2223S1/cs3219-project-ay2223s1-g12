@@ -7,7 +7,13 @@ import { Typography } from '@mui/material';
 
 import './CountdownView.css';
 
+// history service
+import Cookies from 'js-cookie';
+import { updateAttemptedQuestions } from '../../Util';
+
 function CountdownView(props) {
+    const [username, setUsername] = useState(Cookies.get('username'));
+
     const { getSocket } = useContext(SocketContext);
 
     let socket = getSocket();
@@ -55,9 +61,11 @@ function CountdownView(props) {
             console.log(socket.connected); // true
         });
 
-        socket.on("match-success", (firstClientSocketId, secondClientSocketId, questionData) => {
+        socket.on("match-success", async (firstClientSocketId, secondClientSocketId, questionData) => {
             setMatchingStatus('match-success');
             console.log(firstClientSocketId);
+            console.log('iguana', questionData.question.QuestionTitle);
+            await updateAttemptedQuestions(username, questionData.question.QuestionTitle, questionData.question.QuestionDifficulty);
             navigate('/roompage', {
                 state: {
                     roomId: firstClientSocketId,
