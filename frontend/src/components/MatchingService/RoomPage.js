@@ -106,6 +106,7 @@ export default function RoomPage() {
         });
 
         return () => {
+            socket.off("connect");
             socket.off("update-question");
             socket.disconnect();
             window.sessionStorage.clear();
