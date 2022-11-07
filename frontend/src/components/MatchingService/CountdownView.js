@@ -4,16 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
-import { URL_HISTORY_SVC } from "../../configs";
-import axios from "axios";
-import Cookies from 'js-cookie';
 
 import './CountdownView.css';
 
 function CountdownView(props) {
-    const [username, setUsername] = useState(Cookies.get('username'));
-
-
     const { getSocket } = useContext(SocketContext);
 
     let socket = getSocket();
@@ -56,26 +50,14 @@ function CountdownView(props) {
     const [remainingTime, setRemainingTime] = useState();
     const navigate = useNavigate();
 
-    const updateAttemptedQuestions = async (questionData) => {
-        await axios.put(URL_HISTORY_SVC + '/' + username,
-            { 'questionTitle': questionData.question.QuestionTitle, 'questionDifficulty': questionData.question.QuestionDifficulty })
-            .then(response => {
-                console.log('History update success');
-            })
-            .catch((err) => {
-                console.log(err)
-            });
-    }
-
     useEffect(() => {
         socket.on("connect", () => {
             console.log(socket.connected); // true
         });
 
-        socket.on("match-success", async (firstClientSocketId, secondClientSocketId, questionData) => {
+        socket.on("match-success", (firstClientSocketId, secondClientSocketId, questionData) => {
             setMatchingStatus('match-success');
             console.log(firstClientSocketId);
-            await updateAttemptedQuestions(questionData);
             navigate('/roompage', {
                 state: {
                     roomId: firstClientSocketId,
