@@ -56,6 +56,17 @@ function CountdownView(props) {
     const [remainingTime, setRemainingTime] = useState();
     const navigate = useNavigate();
 
+    const updateAttemptedQuestions = async (questionData) => {
+        await axios.put(URL_HISTORY_SVC + '/' + username,
+            { 'questionTitle': questionData.question.QuestionTitle, 'questionDifficulty': questionData.question.QuestionDifficulty })
+            .then(response => {
+                console.log('History update success');
+            })
+            .catch((err) => {
+                console.log(err)
+            });
+    }
+
     useEffect(() => {
         socket.on("connect", () => {
             console.log(socket.connected); // true
@@ -78,17 +89,6 @@ function CountdownView(props) {
 
     if (!props.show) {
         return null;
-    }
-
-    const updateAttemptedQuestions = async (questionData) => {
-        await axios.put(URL_HISTORY_SVC + '/' + username,
-            { 'questionTitle': questionData.question.questionTitle, 'questionDifficulty': questionData.question.questionDifficulty })
-            .then(response => {
-                console.log('History update success');
-            })
-            .catch((err) => {
-                console.log(err)
-            });
     }
 
     const insideCircle = ({ remainingTime }) => {
