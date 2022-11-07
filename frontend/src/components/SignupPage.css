@@ -34,7 +34,6 @@
     width: 80%;
     overflow-wrap: break-word;
     align-content: flex-start;
-  
 }
 
 .header {
@@ -58,3 +57,4 @@
     /* background-color: purple; */
     height: 150px;
 }
+

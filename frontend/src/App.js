@@ -31,7 +31,7 @@ function App() {
             {/* <Box display={"flex"} flexDirection={"column"} padding={"4rem"}> */}
             <Router>
                 <Routes>
-                    <Route exact path="/" element={<Navigate replace to="/signup" />}></Route>
+                    <Route exact path="/" element={<Navigate replace to="/home" />}></Route>
                     <Route path="/signup" element={<SignupPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/logout" element={<LogoutPage />} />

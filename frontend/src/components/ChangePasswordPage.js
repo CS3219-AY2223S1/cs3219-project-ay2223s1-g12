@@ -118,8 +118,8 @@ function ChangePasswordPage() {
     );
 
     return (
-        <Box display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} padding={"4rem"}>
-            <Paper elevation={2}>
+        <Box backgroundColor={"#132439"} display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} padding={"4rem"} style={{ height: "100vh" }}>
+            <Paper elevation={2} style={{ borderRadius: "20px", marginTop: "-200px"}}>
                 <Stack direction="column" spacing={2} padding={"4rem"}>
                     <Typography variant={"h3"}>Change Password</Typography>
                     <Typography variant={"subtitle1"}>
@@ -129,6 +129,7 @@ function ChangePasswordPage() {
                         disabled
                         label="Username"
                         variant="outlined"
+                        size="small"
                         value={username}
                     />
                     <TextField
@@ -138,6 +139,7 @@ function ChangePasswordPage() {
                         type="password"
                         placeholder="Type your current password"
                         value={oldPassword}
+                        size="small"
                         onChange={(e) => setOldPassword(e.target.value)}
                         onBlur={checkOldPwNotMatchNewPw}
                     />
@@ -152,6 +154,7 @@ function ChangePasswordPage() {
                         onBlur={(e) => { validatePasswordStrength(e); checkNewPasswordsMatch(e); }}
                         error={passwordStrengthMsg !== ''}
                         helperText={passwordStrengthMsg}
+                        size="small"
                     />
                     <TextField
                         required
@@ -164,9 +167,10 @@ function ChangePasswordPage() {
                         onBlur={checkNewPasswordsMatch}
                         error={passwordErrMsg !== ''}
                         helperText={passwordErrMsg}
+                        size="small"
                     />
                     <Box display={"flex"} flexDirection={"row"} justifyContent={"center"}>
-                        <Button variant={"contained"} onClick={handleChangePassword}>Submit</Button>
+                        <Button variant={"contained"} onClick={handleChangePassword} style={{ backgroundColor: "#3370FF", width: "100%"}}>Submit</Button>
                     </Box>
                     
                 </Stack>
