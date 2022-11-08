@@ -29,6 +29,6 @@ To switch from dockerized version to local development,
 1. Go to the root directory of the repository.
 2. Run the following command:
    ```bash 
-   cd matching-service/controller/socketHandler
+   cd matching-service
    ```
-3. Open `pendingMatchHandler.js` and set `isDockerized` toggle to false.
+3. Open `configs.js` and set `isDocker` toggle to false.
