@@ -23,7 +23,6 @@ import './RoomPage.css';
 export default function RoomPage() {
     const [username, setUsername] = useState(Cookies.get('username'));
 
-
     //styling for modal
     const modal = {
         position: 'fixed',
