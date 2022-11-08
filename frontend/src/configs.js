@@ -1,7 +1,5 @@
-const isDocker = true;
-
-const URI_USER_SVC = isDocker ? 'http://user-service:8000' : 'http://localhost:8000'
-const URI_HISTORY_SVC = isDocker ? 'http://history-service:8004' : 'http://localhost:8004'
+const URI_USER_SVC = process.env.URI_USER_SVC || 'http://localhost:8000'
+const URI_HISTORY_SVC = process.env.URI_HISTORY_SVC || 'http://localhost:8004'
 
 const PREFIX_USER_SVC = '/api/user'
 

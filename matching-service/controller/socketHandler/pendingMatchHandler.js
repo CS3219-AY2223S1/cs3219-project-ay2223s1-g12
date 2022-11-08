@@ -1,7 +1,7 @@
 import pendingMatchController from '../pendingMatchController.js';
+import { URL_QUESTION_SVC } from '../../configs.js';
 import axios from 'axios';
 
-let isDockerized = true;
 
 const pendingMatchHandler = (io) => {
     io.on('connection', (socket) => {
@@ -20,8 +20,7 @@ const pendingMatchHandler = (io) => {
                 let question; 
 
                 //retrive easy question by sending a GET API to question-service
-                //NOTE: use this url instead if running locally without docker: 'http://localhost:8002/api/questions/?level=easy'
-                axios.get(isDockerized ? 'http://question-service:8002/api/questions/?level=easy':  'http://localhost:8002/api/questions/?level=easy' )
+                axios.get(URL_QUESTION_SVC + '/api/questions/?level=easy')
                     .then(response => {
                         question = response.data;
                         // emit succcess event to the matched users
@@ -54,9 +53,7 @@ const pendingMatchHandler = (io) => {
                 let question;
 
                 //retrive medium question by sending a GET API to question-service
-                //NOTE: use this url instead if running locally without docker: 'http://localhost:8002/api/questions/?level=medium'
-                axios.get( isDockerized ? 'http://question-service:8002/api/questions/?level=medium'
-                                        : 'http://localhost:8002/api/questions/?level=medium')
+                axios.get(URL_QUESTION_SVC + '/api/questions/?level=medium')
                     .then(response => {
                         question = response.data;
                         io.to(socket.id).emit('match-success', currentSocketId, socket.id, question);
@@ -81,10 +78,8 @@ const pendingMatchHandler = (io) => {
                 let question;
 
                 //retrive hard question by sending a GET API to question-service
-                //NOTE: use this url instead if running locally without docker: 'http://localhost:8002/api/questions/?level=hard'
-                axios.get(isDockerized ? 'http://question-service:8002/api/questions/?level=hard'
-                                       :'http://localhost:8002/api/questions/?level=hard')
-                    .then(response => {
+                axios.get(URL_QUESTION_SVC + '/api/questions/?level=hard')
+                        .then(response => {
                         question = response.data;
                         io.to(socket.id).emit('match-success', currentSocketId, socket.id, question);
                         io.to(currentSocketId).emit('match-success', currentSocketId, socket.id, question);
@@ -118,8 +113,7 @@ const pendingMatchHandler = (io) => {
             let question; 
 
             if (questionDifficulty == 'easy') {
-                axios.get( isDockerized ? 'http://question-service:8002/api/questions/generateNew/?level=easy'
-                                        : 'http://localhost:8002/api/questions/generateNew/?level=easy', {
+                axios.get(URL_QUESTION_SVC + '/api/questions/generateNew/?level=easy', {
                     data: {
                         currQuestionTitle : questionTitle
                     }
@@ -131,8 +125,7 @@ const pendingMatchHandler = (io) => {
                     console.log(error);
                 });
             } else if (questionDifficulty == 'medium') {
-                axios.get( isDockerized ? 'http://question-service:8002/api/questions/generateNew/?level=medium'
-                                        : 'http://localhost:8002/api/questions/generateNew/?level=medium', {
+                axios.get(URL_QUESTION_SVC + '/api/questions/generateNew/?level=medium', {
                     data: {
                         currQuestionTitle : questionTitle
                     }
@@ -144,8 +137,7 @@ const pendingMatchHandler = (io) => {
                     console.log(error);
                 });
             } else {
-                axios.get( isDockerized ? 'http://question-service:8002/api/questions/generateNew/?level=hard'
-                                        : 'http://localhost:8002/api/questions/generateNew/?level=easy', {
+                axios.get(URL_QUESTION_SVC + '/api/questions/generateNew/?level=hard', {
                     data: {
                         currQuestionTitle : questionTitle
                     }
