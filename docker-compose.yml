@@ -11,6 +11,7 @@ services:
       - matching-service
       - question-service
       - chat-service
+      - history-service
 
   user-service:
     build: ./user-service
