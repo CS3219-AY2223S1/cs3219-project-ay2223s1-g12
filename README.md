@@ -36,7 +36,7 @@ To switch from dockerized version to local development,
     ```bash 
    cd..
    ```
-5. Ensure that you are in the root directory before open a new terminal and run the following command:
+5. Ensure that you are in the root directory before opening a new terminal and run the following command:
    ``` bash 
    cd user-service
    npm run dev 
