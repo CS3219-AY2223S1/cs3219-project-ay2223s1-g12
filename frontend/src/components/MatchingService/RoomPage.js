@@ -97,6 +97,7 @@ export default function RoomPage() {
           });
         socket.emit("join-room", roomId);
 
+
         socket.on("update-question", async (question) => {            
             window.sessionStorage.setItem("question", JSON.stringify(question.question));
             setQuestionTitle(question.question.QuestionTitle);
@@ -137,7 +138,7 @@ export default function RoomPage() {
         navigate('/selectquestiondifficulty');
     }
 
-    const refreshHandler = async (e) => {
+    const refreshHandler = (e) => {
         socket.emit("refresh-question", roomId, questionDifficulty, questionTitle);
         setShowRefreshModal(false);
     }
