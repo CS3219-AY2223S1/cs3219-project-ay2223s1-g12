@@ -15,7 +15,6 @@ export async function storeRecord(req, res) {
             console.log(`Successfully added ${questionTitle} to ${username}'s records`);
 
             if (storeRecord.status === 'created') {
-                console.log('new user created')
                 res.status(201);
             } else if (storeRecord.status === 'updated') {
                 res.status(200);
@@ -34,10 +33,7 @@ export async function getRecord(req, res) {
         const { username } = req.params;
         const level = req.query.level;
 
-        console.log(username, level)
-
         const resp = await ormGetRecords(username);
-        console.log('resp', resp)
         if (!resp) {
             return res.status(400).json({ message: 'No records exist for ' + username});
         }
@@ -56,7 +52,6 @@ export async function getRecord(req, res) {
 
         return res.status(200).json({ message: `Successfully retrieved ${username}'s records!`, data: filteredResp });
     } catch (err) {
-        console.log(err)
         return res.status(500).json({ message: 'Database failure when getting record'});
     }
 }

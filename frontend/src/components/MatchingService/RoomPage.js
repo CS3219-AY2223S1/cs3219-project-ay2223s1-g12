@@ -23,7 +23,6 @@ import './RoomPage.css';
 export default function RoomPage() {
     const [username, setUsername] = useState(Cookies.get('username'));
 
-
     //styling for modal
     const modal = {
         position: 'fixed',
@@ -97,8 +96,7 @@ export default function RoomPage() {
           });
         socket.emit("join-room", roomId);
 
-
-        socket.on("update-question", async (question) => {            
+        socket.on("update-question", async (question) => {
             window.sessionStorage.setItem("question", JSON.stringify(question.question));
             setQuestionTitle(question.question.QuestionTitle);
             setQuestionBody(question.question.QuestionBody);
