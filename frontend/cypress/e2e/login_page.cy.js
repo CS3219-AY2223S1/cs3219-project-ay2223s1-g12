@@ -11,7 +11,7 @@ describe('Login page', () => {
     });
 
     it('throw correct error when not connected to database', () => {
-        cy.visit('http://localhost:3000/signup');
+        cy.visit('http://localhost:3000/login');
 
         cy.get('.userInputUsername')
             .type(validNewUser.username);
@@ -19,7 +19,7 @@ describe('Login page', () => {
         cy.get('.userInputPassword')
             .type(validNewUser.password);
 
-        cy.get('.signupButton')
+        cy.get('.loginButton')
             .click();
 
         // error pops up should exist
