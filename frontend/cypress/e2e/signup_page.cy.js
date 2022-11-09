@@ -41,5 +41,13 @@ describe('Signup page', () => {
             .contains('Password should contain at least one number and one alphabet, and must be at least 8 characters');
         
     });
-    
+
+    it('directs to login', () => {
+        cy.visit('http://localhost:3000/signup');
+
+        cy.get('.loginLink')
+            .click();
+
+        cy.url().should('include', '/login')  
+    });
 });

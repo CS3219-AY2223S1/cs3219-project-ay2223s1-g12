@@ -25,7 +25,12 @@ describe('Login page', () => {
         // error pops up should exist
     });
 
-    // it('successfully sign up with valid username and password', () => {
-        
-    // });
+    it('directs to signup', () => {
+        cy.visit('http://localhost:3000/login');
+
+        cy.get('.signupLink')
+            .click();
+
+        cy.url().should('include', '/signup')  
+    });
 });
